@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OP Book - Online Hospital Appointment Booking</title>
+    <meta name="description"
+        content="Book your hospital appointments online with OP Book. Fast, easy, and convenient healthcare scheduling.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Landing Page with Logo Animation -->
+    <div id="landing-page" class="landing-page">
+        <div class="logo-container">
+            <img src="logo.png" alt="OP Book Logo" class="logo-animation">
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container" style="display: none;">
+
+        <!-- Home Page -->
+        <div id="home-page" class="page active">
+            <header class="app-header">
+                <div class="header-content">
+                    <img src="logo.png" alt="OP Book" class="header-logo">
+                    <h1 class="brand-name">OP Book</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="my-account-btn" class="account-btn" style="display: none;">
+                        <span class="account-icon">👤</span>
+                        <span class="account-text">My Account</span>
+                    </button>
+                </div>
+            </header>
+
+            <main class="home-main">
+                <div class="options-container">
+                    <div class="option-card primary-option" id="book-now-btn">
+                        <div class="option-icon">📅</div>
+                        <h2 class="option-title">Do You Want to Book Your OP Now?</h2>
+                        <p class="option-description">Find and book appointments with top hospitals instantly</p>
+                        <div class="option-arrow">→</div>
+                    </div>
+
+                    <div class="option-card secondary-option" id="register-btn">
+                        <div class="option-icon">✨</div>
+                        <h2 class="option-title">Register Now</h2>
+                        <p class="option-description">Create your account to manage bookings and access history</p>
+                        <div class="option-arrow">→</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Hospital Search Page -->
+        <div id="search-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h1>Select Hospital</h1>
+            </header>
+
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="hospital-search" placeholder="Search hospitals by name or location..."
+                        class="search-input">
+                    <button class="search-btn">🔍</button>
+                </div>
+            </div>
+
+            <div class="hospitals-list">
+                <h3 class="section-title">Top Hospitals</h3>
+                <div id="hospitals-container" class="cards-grid"></div>
+            </div>
+        </div>
+
+        <!-- Hospital Details & Doctor Selection -->
+        <div id="hospital-details-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+            </header>
+
+            <div class="hospital-info">
+                <h1 id="hospital-name-display" class="hospital-name"></h1>
+                <p id="hospital-location-display" class="hospital-location"></p>
+            </div>
+
+            <div class="doctors-section">
+                <h3 class="section-title">Select a Doctor</h3>
+                <div id="doctors-container" class="doctors-list"></div>
+            </div>
+        </div>
+
+        <!-- Booking Details Form -->
+        <div id="booking-form-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h1>Patient Details</h1>
+            </header>
+
+            <form id="booking-form" class="form-container">
+                <div class="form-group">
+                    <label for="patient-name">Full Name *</label>
+                    <input type="text" id="patient-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="patient-age">Age *</label>
+                    <input type="number" id="patient-age" min="1" max="120" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="patient-gender">Gender *</label>
+                    <select id="patient-gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="patient-mobile">Mobile Number *</label>
+                    <input type="tel" id="patient-mobile" pattern="[0-9]{10}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="appointment-date">Preferred Date *</label>
+                    <input type="date" id="appointment-date" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Proceed to Payment</button>
+            </form>
+        </div>
+
+        <!-- Payment Page -->
+        <div id="payment-page" class="page">
+            <header class="page-header">
+                <h1>Payment</h1>
+            </header>
+
+            <div class="payment-container">
+                <div class="payment-summary">
+                    <h3>Booking Summary</h3>
+                    <div id="payment-summary-content"></div>
+                </div>
+
+                <div class="qr-section">
+                    <h3>Scan to Pay</h3>
+                    <div class="qr-code">
+                        <img src="qr-placeholder.png" alt="Payment QR Code" id="payment-qr">
+                    </div>
+                    <p class="payment-amount" id="payment-amount"></p>
+                </div>
+
+                <div class="helpline">
+                    <p>Need help? Call: <strong id="helpline-number"></strong></p>
+                </div>
+
+                <button class="btn-primary" onclick="confirmPayment()">Confirm Payment</button>
+            </div>
+        </div>
+
+        <!-- Payment Success Page -->
+        <div id="success-page" class="page">
+            <div class="success-container">
+                <div class="success-icon">✓</div>
+                <h1 class="success-title">Payment Successful!</h1>
+                <p class="success-message">Your appointment has been confirmed</p>
+
+                <div class="booking-details" id="success-booking-details"></div>
+
+                <div class="success-actions">
+                    <button class="btn-primary" onclick="navigateTo('home-page')">Back to Home</button>
+                    <button class="btn-secondary" onclick="navigateTo('search-page')">Book Another</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Portal Selection -->
+        <div id="patient-options-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h1>Patient Portal</h1>
+            </header>
+
+            <div class="options-container">
+                <div class="option-card" id="new-patient-btn">
+                    <div class="option-icon">➕</div>
+                    <h2 class="option-title">Register as New User</h2>
+                    <p class="option-description">Create a new account and start booking appointments</p>
+                </div>
+
+                <div class="option-card" id="view-patient-profile-btn">
+                    <div class="option-icon">👤</div>
+                    <h2 class="option-title">View User Profile</h2>
+                    <p class="option-description">View and manage your personal details and history</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Login Page -->
+        <div id="patient-login-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h1>Patient Login</h1>
+            </header>
+
+            <form id="patient-login-form" class="form-container">
+                <div class="form-group">
+                    <label for="login-patient-username">Username *</label>
+                    <input type="text" id="login-patient-username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="login-patient-password">Password *</label>
+                    <input type="password" id="login-patient-password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+        </div>
+
+        <!-- Patient Profile Page (View/Edit) -->
+        <div id="patient-profile-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h1>User Profile</h1>
+            </header>
+
+            <div class="profile-container form-container">
+                <!-- View Mode -->
+                <div id="profile-view-mode">
+                    <div class="profile-card">
+                        <div class="profile-header-main">
+                            <div class="profile-large-avatar">👤</div>
+                            <div class="profile-title-info">
+                                <h2 id="display-profile-name">Patient Name</h2>
+                                <p class="profile-subtitle" id="display-profile-username">@username</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Age</span>
+                                <span class="info-value" id="display-profile-age">--</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Gender</span>
+                                <span class="info-value" id="display-profile-gender">--</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Contact</span>
+                                <span class="info-value" id="display-profile-mobile">--</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-actions">
+                            <button class="btn-secondary btn-sm" onclick="toggleProfileEdit(true)">Edit Profile</button>
+                            <button class="btn-danger btn-sm" onclick="logout()">Logout</button>
+                        </div>
+                    </div>
+
+                    <!-- Change Password Section -->
+                    <div class="appointments-section mt-3">
+                        <div class="section-header">
+                            <h3>Security & Account</h3>
+                        </div>
+                        <div class="security-container">
+                            <button class="btn-secondary btn-sm" onclick="togglePasswordForm()">Change Password</button>
+
+                            <div id="password-change-form-container" style="display: none; margin-top: 1.5rem;">
+                                <form id="password-change-form">
+                                    <div class="form-group">
+                                        <label for="old-password">Old Password *</label>
+                                        <input type="password" id="old-password" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="new-password">New Password *</label>
+                                        <input type="password" id="new-password" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirm-new-password">Confirm New Password *</label>
+                                        <input type="password" id="confirm-new-password" required>
+                                    </div>
+                                    <div class="profile-actions mt-2">
+                                        <button type="submit" class="btn-primary btn-sm">Update Password</button>
+                                        <button type="button" class="btn-secondary btn-sm"
+                                            onclick="togglePasswordForm()">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="appointments-section mt-3">
+                        <div class="section-header">
+                            <h3>Current Booked Appointments</h3>
+                        </div>
+                        <div id="current-appointments-list" class="appointments-list">
+                            <!-- Appointments will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="appointments-section mt-3">
+                        <div class="section-header">
+                            <h3>Past Appointments</h3>
+                        </div>
+                        <div id="past-appointments-list" class="appointments-list">
+                            <!-- Appointments will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Mode (Initially Hidden) -->
+                <div id="profile-edit-mode" style="display: none;">
+                    <form id="profile-edit-form">
+                        <div class="form-group">
+                            <label for="edit-patient-name">Full Name *</label>
+                            <input type="text" id="edit-patient-name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-patient-age">Age *</label>
+                            <input type="number" id="edit-patient-age" min="1" max="120" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-patient-gender">Gender *</label>
+                            <select id="edit-patient-gender" required>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-patient-mobile">Mobile Number *</label>
+                            <input type="tel" id="edit-patient-mobile" pattern="[0-9]{10}" required>
+                        </div>
+
+                        <div class="profile-actions mt-3">
+                            <button type="submit" class="btn-primary">Save Changes</button>
+                            <button type="button" class="btn-secondary" onclick="toggleProfileEdit(false)"
+                                style="margin-left: 10px;">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Type Selection -->
+        <div id="register-type-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h1>Register As</h1>
+            </header>
+
+            <div class="options-container">
+                <div class="option-card" id="register-patient-btn">
+                    <div class="option-icon">👤</div>
+                    <h2 class="option-title">Patient</h2>
+                    <p class="option-description">Book appointments and manage your health records</p>
+                </div>
+
+                <div class="option-card" id="register-hospital-btn">
+                    <div class="option-icon">🏥</div>
+                    <h2 class="option-title">Hospital</h2>
+                    <p class="option-description">Manage doctors, appointments, and patient notifications</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hospital Portal Selection -->
+        <div id="hospital-options-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h1>Hospital Portal</h1>
+            </header>
+
+            <div class="options-container">
+                <div class="option-card" id="new-hospital-btn">
+                    <div class="option-icon">➕</div>
+                    <h2 class="option-title">Register as New Hospital</h2>
+                    <p class="option-description">Create a new hospital account and start managing your medical staff
+                    </p>
+                </div>
+
+                <div class="option-card" id="view-hospital-btn">
+                    <div class="option-icon">🔐</div>
+                    <h2 class="option-title">View Hospital Dashboard</h2>
+                    <p class="option-description">Login to access your existing hospital dashboard</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hospital Login Page -->
+        <div id="hospital-login-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h1>Hospital Login</h1>
+            </header>
+
+            <form id="hospital-login-form" class="form-container">
+                <div class="form-group">
+                    <label for="login-hospital-code">Hospital Code *</label>
+                    <input type="text" id="login-hospital-code" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="login-hospital-password">Password *</label>
+                    <input type="password" id="login-hospital-password" placeholder="Enter your hospital password"
+                        required>
+                </div>
+
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+        </div>
+
+        <!-- Patient Registration -->
+        <div id="patient-register-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h1>Patient Registration</h1>
+            </header>
+
+            <form id="patient-register-form" class="form-container">
+                <div class="form-group">
+                    <label for="reg-patient-name">Full Name *</label>
+                    <input type="text" id="reg-patient-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-patient-age">Age *</label>
+                    <input type="number" id="reg-patient-age" min="1" max="120" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-patient-gender">Gender *</label>
+                    <select id="reg-patient-gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-patient-mobile">Mobile Number *</label>
+                    <input type="tel" id="reg-patient-mobile" pattern="[0-9]{10}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-patient-username">Username *</label>
+                    <input type="text" id="reg-patient-username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-patient-password">Password *</label>
+                    <input type="password" id="reg-patient-password" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Register</button>
+            </form>
+        </div>
+
+        <!-- Hospital Registration -->
+        <div id="hospital-register-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h1>Hospital Registration</h1>
+            </header>
+
+            <form id="hospital-register-form" class="form-container">
+                <div class="form-group">
+                    <label for="reg-hospital-name">Hospital Name *</label>
+                    <input type="text" id="reg-hospital-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-hospital-code">Hospital Code *</label>
+                    <input type="text" id="reg-hospital-code" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-hospital-location">Location *</label>
+                    <input type="text" id="reg-hospital-location" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-hospital-branch">Branch *</label>
+                    <input type="text" id="reg-hospital-branch" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-hospital-helpline">Helpline Number *</label>
+                    <input type="tel" id="reg-hospital-helpline" pattern="[0-9]{10}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-hospital-password">Password *</label>
+                    <input type="password" id="reg-hospital-password" placeholder="Create a secure password" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Register Hospital</button>
+            </form>
+        </div>
+
+        <!-- Hospital Dashboard -->
+        <div id="hospital-dashboard-page" class="page">
+            <header class="page-header">
+                <h1>Hospital Dashboard</h1>
+                <button class="btn-secondary" onclick="logout()">Logout</button>
+            </header>
+
+            <div class="dashboard-container">
+                <!-- Doctors List Section -->
+                <div class="dashboard-section">
+                    <h2>Our Doctors</h2>
+                    <div id="hospital-doctors-list" class="doctors-list"></div>
+                    <button class="btn-primary mt-2" onclick="toggleAddDoctorForm()">+ Add New Doctor</button>
+                </div>
+
+                <!-- Add Doctor Form (Initially Hidden) -->
+                <div id="add-doctor-section" class="dashboard-section" style="display: none;">
+                    <h2>Add Doctor</h2>
+                    <form id="add-doctor-form" class="form-container">
+                        <div class="form-group">
+                            <label for="doctor-name">Doctor Name *</label>
+                            <input type="text" id="doctor-name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="doctor-degree">Degree *</label>
+                            <input type="text" id="doctor-degree" placeholder="e.g., MBBS, MD" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="doctor-specialization">Specialization *</label>
+                            <input type="text" id="doctor-specialization" placeholder="e.g., Cardiology" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="doctor-fees">Consultation Fees *</label>
+                            <input type="number" id="doctor-fees" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="receptionist-contact">Receptionist Contact *</label>
+                            <input type="tel" id="receptionist-contact" pattern="[0-9]{10}" required>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Add Doctor</button>
+                        <button type="button" class="btn-secondary mt-1" onclick="toggleAddDoctorForm()">Cancel</button>
+                    </form>
+                </div>
+
+                <!-- Send Notification Section -->
+                <div class="dashboard-section">
+                    <h2>Send Notification</h2>
+                    <form id="notification-form" class="form-container">
+                        <div class="form-group">
+                            <label for="notification-patient">Patient Mobile *</label>
+                            <input type="tel" id="notification-patient" pattern="[0-9]{10}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notification-status">Appointment Status *</label>
+                            <select id="notification-status" required>
+                                <option value="">Select Status</option>
+                                <option value="successful">Successful</option>
+                                <option value="delayed">Delayed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notification-message">Message</label>
+                            <textarea id="notification-message" rows="4"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Send Notification</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
